@@ -5,7 +5,7 @@ const Navbar = () => {
     <Box>
       <AppBar
         position="static"
-        sx={{ flexGrow: 1, background: "black", opacity: 0.9 }}
+        sx={{ flexGrow: 1, background: "black", opacity: 0.7 }}
       >
         <Toolbar>
           <Typography

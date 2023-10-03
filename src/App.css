@@ -1,6 +1,7 @@
 .App{
     min-height: 100vh;
     background-image: url('/public/car.png');
+    
     background-size: cover;
     background-position: center;
     opacity: 1;
