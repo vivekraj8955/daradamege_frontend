@@ -1,6 +1,8 @@
 import React from "react";
 import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 const Navbar = () => {
+  const navigate = useNavigate();
   return (
     <Box>
       <AppBar
@@ -24,6 +26,7 @@ const Navbar = () => {
             variant="contained"
             color="success"
             sx={{ m: 2, borderRadius: "15px" }}
+            onClick={() => navigate("/login")}
           >
             Login
           </Button>
@@ -31,6 +34,7 @@ const Navbar = () => {
             variant="contained"
             color="success"
             sx={{ m: 2, borderRadius: "15px" }}
+            onClick={() => navigate("/signup")}
           >
             Signup
           </Button>
