@@ -1,7 +1,30 @@
-import { Box, Button, Container, Grid, TextField } from "@mui/material";
-import React from "react";
+import { Alert, Box, Button, Container, Grid, TextField } from "@mui/material";
+import React, { useEffect, useState } from "react";
 
 const Signup = () => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [repassword, setRepassword] = useState("");
+  const [showAlert, setShowAlert] = useState(false);
+  const [message, setMessage] = useState("");
+  const [color, setColor] = useState("success")
+  const submit = () => {
+    console.log(name, email, password, repassword)
+    if (password !== repassword) {
+      setShowAlert(true);
+      setMessage("Password doesn't match with Re-Password")
+      setColor("error")
+    }
+    if (password.length <= 5) {
+      setShowAlert(true);
+      setMessage("Password lenght should be more than 5")
+      setColor("error")
+    }
+  }
+  useEffect(() => {
+
+  }, [])
   return (
     <Container
       disableGutters
@@ -13,6 +36,11 @@ const Signup = () => {
         opacity: "0.80",
       }}
     >
+      {showAlert && (
+        <Alert severity="warning" onClose={() => setShowAlert(false)} sx={{ position: "absolute", top: "12%", left: "36%" }}>
+          {message}
+        </Alert>
+      )}
       <Grid
         container
         rowSpacing={1}
@@ -50,6 +78,9 @@ const Signup = () => {
               border: "2px solid white",
               borderRadius: "5px",
             }}
+            onChange={(e) => {
+              setName(e.target.value);
+            }}
           />
         </Grid>
         <Grid item xs={6} container>
@@ -62,6 +93,9 @@ const Signup = () => {
               background: "white",
               border: "2px solid white",
               borderRadius: "5px",
+            }}
+            onChange={(e) => {
+              setEmail(e.target.value);
             }}
           />
         </Grid>
@@ -77,6 +111,9 @@ const Signup = () => {
             }}
             type="password"
             fullWidth
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
           />
         </Grid>
         <Grid item xs={12} container>
@@ -91,7 +128,28 @@ const Signup = () => {
             }}
             type="password"
             fullWidth
+            onChange={(e) => {
+              setRepassword(e.target.value);
+            }}
           />
+        </Grid>
+        <Grid item xs={12} container>
+          <Button
+            fullWidth
+            sx={{
+              color: "white",
+              border: "2px solid white",
+              borderRadius: "5px",
+              background: "blue",
+              borderRadius: "10px",
+              "&:hover": {
+                background: "green",
+              },
+            }}
+            onClick={submit}
+          >
+            SIGNUP
+          </Button>
         </Grid>
         <Grid item xs={12} container>
           <Button
