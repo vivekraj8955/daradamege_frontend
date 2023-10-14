@@ -1,7 +1,7 @@
 import { Alert, Box, Button, Container, Grid, TextField } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import { createUserWithEmailAndPassword, setPersistence, browserLocalPersistence, onAuthStateChanged } from "firebase/auth";
-import { auth } from '../FireBase'
+import React, { useContext, useEffect, useState } from "react";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../FireBase";
 import { useNavigate } from "react-router-dom";
 const Signup = () => {
   const navigate = useNavigate();
@@ -11,47 +11,30 @@ const Signup = () => {
   const [repassword, setRepassword] = useState("");
   const [showAlert, setShowAlert] = useState(false);
   const [message, setMessage] = useState("");
-  const [color, setColor] = useState("success")
+  const [color, setColor] = useState("success");
   const submit = async () => {
-    console.log(name, email, password, repassword)
+    console.log(name, email, password, repassword);
     if (password !== repassword) {
       setShowAlert(true);
-      setMessage("Password doesn't match with Re-Password")
-      setColor("error")
-    }
-    else if (password.length <= 5) {
+      setMessage("Password doesn't match with Re-Password");
+      setColor("error");
+    } else if (password.length <= 5) {
       setShowAlert(true);
-      setMessage("Password lenght should be more than 5")
-      setColor("error")
-    }
-    else {
+      setMessage("Password lenght should be more than 5");
+      setColor("error");
+    } else {
       try {
-        await createUserWithEmailAndPassword(auth, email, password)
+        await createUserWithEmailAndPassword(auth, email, password);
         setShowAlert(true);
-        setMessage("Successfully signedUp Redirecting ...")
-        setColor("success")
-        await setPersistence(auth, browserLocalPersistence)
+        setMessage("Successfully signedUp Redirecting ...");
+        setColor("success");
       } catch (error) {
         setShowAlert(true);
-        setMessage("Something went wrong Signup unsuccessful")
-        setColor("error")
+        setMessage("Something went wrong Signup unsuccessful");
+        setColor("error");
       }
     }
-  }
-  useEffect(() => {
-    if (auth?.currentUser) {
-      console.log(auth.currentUser)
-      navigate('/home')
-    }
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        user.displayName = name;
-        setTimeout(() => {
-          navigate('/home');
-        }, 1000);
-      }
-    });
-  }, [onAuthStateChanged])
+  };
   return (
     <Container
       disableGutters
@@ -64,7 +47,11 @@ const Signup = () => {
       }}
     >
       {showAlert && (
-        <Alert severity={color} onClose={() => setShowAlert(false)} sx={{ position: "absolute", top: "12%", left: "36%" }}>
+        <Alert
+          severity={color}
+          onClose={() => setShowAlert(false)}
+          sx={{ position: "absolute", top: "12%", left: "36%" }}
+        >
           {message}
         </Alert>
       )}
@@ -176,23 +163,6 @@ const Signup = () => {
             onClick={submit}
           >
             SIGNUP
-          </Button>
-        </Grid>
-        <Grid item xs={12} container>
-          <Button
-            fullWidth
-            sx={{
-              color: "white",
-              border: "2px solid white",
-              borderRadius: "5px",
-              background: "blue",
-              borderRadius: "10px",
-              "&:hover": {
-                background: "green",
-              },
-            }}
-          >
-            Login with Google
           </Button>
         </Grid>
       </Grid>

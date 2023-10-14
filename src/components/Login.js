@@ -1,7 +1,25 @@
-import { Box, Button, Container, Grid, TextField } from "@mui/material";
-import React from "react";
+import { Alert, Box, Button, Container, Grid, TextField } from "@mui/material";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import React, { useContext, useState } from "react";
+import { auth } from "../FireBase";
 
 const Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+  const [showAlert, setShowAlert] = useState(false);
+  const [color, setColor] = useState("success");
+  const submit = async () => {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      setShowAlert(true);
+      setMessage("Login Successfully redirecting....");
+    } catch (err) {
+      setShowAlert(true);
+      setColor("error");
+      setMessage("Login failed Enter correct credentials");
+    }
+  };
   return (
     <Container
       disableGutters
@@ -13,6 +31,15 @@ const Login = () => {
         opacity: "0.80",
       }}
     >
+      {showAlert && (
+        <Alert
+          severity={color}
+          onClose={() => setShowAlert(false)}
+          sx={{ position: "absolute", top: "12%", left: "36%" }}
+        >
+          {message}
+        </Alert>
+      )}
       <Grid
         container
         rowSpacing={1}
@@ -51,6 +78,7 @@ const Login = () => {
               border: "2px solid white",
               borderRadius: "5px",
             }}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </Grid>
         <Grid item xs={12} container>
@@ -65,9 +93,9 @@ const Login = () => {
             }}
             type="password"
             fullWidth
+            onChange={(e) => setPassword(e.target.value)}
           />
         </Grid>
-
         <Grid item xs={12} container>
           <Button
             fullWidth
@@ -81,8 +109,9 @@ const Login = () => {
                 background: "green",
               },
             }}
+            onClick={submit}
           >
-            Login with Google
+            Login
           </Button>
         </Grid>
       </Grid>
