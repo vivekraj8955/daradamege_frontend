@@ -1,7 +1,10 @@
 import { Alert, Box, Button, Container, Grid, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
-
+import { createUserWithEmailAndPassword, setPersistence, browserLocalPersistence, onAuthStateChanged } from "firebase/auth";
+import { auth } from '../FireBase'
+import { useNavigate } from "react-router-dom";
 const Signup = () => {
+  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -9,22 +12,46 @@ const Signup = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [message, setMessage] = useState("");
   const [color, setColor] = useState("success")
-  const submit = () => {
+  const submit = async () => {
     console.log(name, email, password, repassword)
     if (password !== repassword) {
       setShowAlert(true);
       setMessage("Password doesn't match with Re-Password")
       setColor("error")
     }
-    if (password.length <= 5) {
+    else if (password.length <= 5) {
       setShowAlert(true);
       setMessage("Password lenght should be more than 5")
       setColor("error")
     }
+    else {
+      try {
+        await createUserWithEmailAndPassword(auth, email, password)
+        setShowAlert(true);
+        setMessage("Successfully signedUp Redirecting ...")
+        setColor("success")
+        await setPersistence(auth, browserLocalPersistence)
+      } catch (error) {
+        setShowAlert(true);
+        setMessage("Something went wrong Signup unsuccessful")
+        setColor("error")
+      }
+    }
   }
   useEffect(() => {
-
-  }, [])
+    if (auth?.currentUser) {
+      console.log(auth.currentUser)
+      navigate('/home')
+    }
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        user.displayName = name;
+        setTimeout(() => {
+          navigate('/home');
+        }, 1000);
+      }
+    });
+  }, [onAuthStateChanged])
   return (
     <Container
       disableGutters
@@ -37,7 +64,7 @@ const Signup = () => {
       }}
     >
       {showAlert && (
-        <Alert severity="warning" onClose={() => setShowAlert(false)} sx={{ position: "absolute", top: "12%", left: "36%" }}>
+        <Alert severity={color} onClose={() => setShowAlert(false)} sx={{ position: "absolute", top: "12%", left: "36%" }}>
           {message}
         </Alert>
       )}
