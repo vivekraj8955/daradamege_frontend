@@ -14,6 +14,7 @@ const Login = () => {
       await signInWithEmailAndPassword(auth, email, password);
       setShowAlert(true);
       setMessage("Login Successfully redirecting....");
+      return;
     } catch (err) {
       setShowAlert(true);
       setColor("error");
